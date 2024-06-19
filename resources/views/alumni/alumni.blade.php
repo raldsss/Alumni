@@ -172,7 +172,7 @@
 
                 Please complete the survey using the link below:
 
-                [http://127.0.0.1:8000/alumnilog]
+                [https://aets-nby88ix38-raldsss-projects.vercel.app/alumnilog]
 
                 Thank you for your participation!
 

@@ -15,3 +15,4 @@ class Employmentdata extends Model
 
     protected $guarded = ['emp_id'];
 }
+

@@ -16,10 +16,10 @@ return new class extends Migration
             $table->integer('batchNumber');
             $table->string('name');
             $table->string('employment_status');
-            $table->string('company_name');
-            $table->string('job_title');
-            $table->string('location');
-            $table->string('remarks');
+            $table->string('company_name')->nullable();
+            $table->string('job_title')->nullable();
+            $table->string('location')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }
