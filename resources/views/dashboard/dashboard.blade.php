@@ -44,14 +44,23 @@
     justify-content: center;
     padding: 20px;
   }
-
-  #chart-container {
-        width: 70%;
+  .main-cart{
+    width: 70%;
         position: relative;
         left: 7rem;
         background: #fefefe;
         padding: 10px;
         box-shadow: 0 0 1px #000;
+        margin: 10px auto;
+  }
+
+  #chart-container {
+        width: 100%;
+        position: relative;
+        /* left: 7rem; */
+        background: #fefefe;
+        padding: 10px;
+        box-shadow: 0 0 1px #d1d1d1;
         margin: 10px auto;
 
     }
@@ -59,6 +68,10 @@
     #employmentChart {
         width: 100%;
         height: 400px;
+    }
+    .chart-title{
+        text-align: center;
+        font-size: 25px;
     }
 </style>
 @section('content')
@@ -95,38 +108,47 @@
 
 </div>
 </div>
-<div id="chart-container">
-    <canvas id="employmentChart"></canvas>
+<div class="main-cart">
+    <div class="chart-title">Semi-Annual Report on Alumni Employment Status</div>
+    <div id="chart-container">
+        <canvas id="employmentChart"></canvas>
+    </div>
 </div>
+
 </div>
 
 @endsection
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const employedCount = {{ $employedCount }};
-        const unEmployedCount = {{ $unEmployedCount }};
-        const withJobOfferCount = {{ $withJobOfferCount }};
+        const employedCount = @json($employedCount);
+        const unEmployedCount = @json($unEmployedCount);
+        const withJobOfferCount = @json($withJobOfferCount);
+
+        // Function to generate a random color
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // Generate a unique random color for each bar
+        const employedColor = getRandomColor();
+        const unEmployedColor = getRandomColor();
+        const withJobOfferColor = getRandomColor();
 
         const ctx = document.getElementById('employmentChart').getContext('2d');
-        const employmentChart = new Chart(ctx, {
+        const chart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ['Employed', 'Not Employed', 'With Job Offer'],
                 datasets: [{
-                    label: 'Alumni Employment Status',
                     data: [employedCount, unEmployedCount, withJobOfferCount],
-                    backgroundColor: [
-                        'rgba(54, 162, 235, 0.6)',
-                        'rgba(255, 99, 132, 0.6)',
-                        'rgba(75, 192, 192, 0.6)'
-                    ],
-                    borderColor: [
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(75, 192, 192, 1)'
-                    ],
+                    backgroundColor: [employedColor, unEmployedColor, withJobOfferColor],
+                    borderColor: [employedColor, unEmployedColor, withJobOfferColor],
                     borderWidth: 1
                 }]
             },
@@ -135,10 +157,13 @@
                     y: {
                         beginAtZero: true
                     }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
                 }
             }
         });
     });
 </script>
-
-

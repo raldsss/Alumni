@@ -11,7 +11,7 @@ class AccountController extends Controller
 {
     public function showChangeAccountForm()
     {
-        $user = Auth::user(); // Assuming the user is authenticated
+        $user = Auth::user();
         return view('auth.changeAccount', compact('user'));
     }
 

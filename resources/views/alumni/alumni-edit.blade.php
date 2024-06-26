@@ -49,7 +49,7 @@
     <div class="row">
       <div class="col-lg-6">
         <div class="form-group">
-            <label for="name">firstname</label>
+            <label for="name">Firstname</label>
             <input type="text" name="firstName" class="form-control @error('name') is-invalid @enderror" id="name" placeholder="Name Alumni" value="{{old('firstName', $alumni->firstName)}}" required>
             @error('name')
             <span class="invalid-feedback text-danger">{{ $message }}</span>
@@ -95,16 +95,50 @@
       <div class="col-lg-6">
         <div class="form-group">
             <label for="city">City/Municipality:</label>
-            <input type="text" name="city" class="form-control @error('city') is-invalid @enderror" id="city" placeholder="city" value="{{old('city', $alumni->city)}}" required>
+            <select id="city" name="city" class="form-control required">
+                <option value="">--Select--</option>
+                <option value="Bago City" {{ $alumni->city == 'Bago City' ? 'selected' : '' }}>Bago City</option>
+                <option value="Binalbagan" {{ $alumni->city == 'Binalbagan' ? 'selected' : '' }}>Binalbagan</option>
+                <option value="Cadiz City" {{ $alumni->city == 'Cadiz City' ? 'selected' : '' }}>Cadiz City</option>
+                <option value="Calatrava" {{ $alumni->city == 'Calatrava' ? 'selected' : '' }}>Calatrava</option>
+                <option value="Candoni" {{ $alumni->city == 'Candoni' ? 'selected' : '' }}>Candoni</option>
+                <option value="Cauyan" {{ $alumni->city == 'Cauyan' ? 'selected' : '' }}>Cauyan</option>
+                <option value="Don Salvador Benedicto" {{ $alumni->city == 'Don Salvador Benedicto' ? 'selected' : '' }}>Don Salvador Benedicto</option>
+                <option value="Enrique B. Magalona" {{ $alumni->city == 'Enrique B. Magalona' ? 'selected' : '' }}>Enrique B. Magalona</option>
+                <option value="Escalante City" {{ $alumni->city == 'Escalante City' ? 'selected' : '' }}>Escalante City</option>
+                <option value="Himamaylan City" {{ $alumni->city == 'Himamaylan City' ? 'selected' : '' }}>Himamaylan City</option>
+                <option value="Hinigaran" {{ $alumni->city == 'Hinigaran' ? 'selected' : '' }}>Hinigaran</option>
+                <option value="Hinoba-an" {{ $alumni->city == 'Hinoba-an' ? 'selected' : '' }}>Hinoba-an</option>
+                <option value="Ilog" {{ $alumni->city == 'Ilog' ? 'selected' : '' }}>Ilog</option>
+                <option value="Isabela" {{ $alumni->city == 'Isabela' ? 'selected' : '' }}>Isabela</option>
+                <option value="Kabankalan" {{ $alumni->city == 'Kabankalan' ? 'selected' : '' }}>Kabankalan City</option>
+                <option value="La Carlota City" {{ $alumni->city == 'La Carlota City' ? 'selected' : '' }}>La Carlota City</option>
+                <option value="La Castellana" {{ $alumni->city == 'La Castellana' ? 'selected' : '' }}>La Castellana</option>
+                <option value="Manapla" {{ $alumni->city == 'Manapla' ? 'selected' : '' }}>Manapla</option>
+                <option value="Moises Padilla" {{ $alumni->city == 'Moises Padilla' ? 'selected' : '' }}>Moises Padilla</option>
+                <option value="Murcia" {{ $alumni->city == 'Murcia' ? 'selected' : '' }}>Murcia</option>
+                <option value="Pontevedra" {{ $alumni->city == 'Pontevedra' ? 'selected' : '' }}>Pontevedra</option>
+                <option value="Pulupandan" {{ $alumni->city == 'Pulupandan' ? 'selected' : '' }}>Pulupandan</option>
+                <option value="Sagay City" {{ $alumni->city == 'Sagay City' ? 'selected' : '' }}>Sagay City</option>
+                <option value="San Carlos City" {{ $alumni->city == 'San Carlos City' ? 'selected' : '' }}>San Carlos City</option>
+                <option value="San Enrique" {{ $alumni->city == 'San Enrique' ? 'selected' : '' }}>San Enrique</option>
+                <option value="Silay City" {{ $alumni->city == 'Silay City' ? 'selected' : '' }}>Silay City</option>
+                <option value="Sipalay" {{ $alumni->city == 'Sipalay' ? 'selected' : '' }}>Sipalay</option>
+                <option value="Talisay" {{ $alumni->city == 'Talisay' ? 'selected' : '' }}>Talisay</option>
+                <option value="Toboso" {{ $alumni->city == 'Toboso' ? 'selected' : '' }}>Toboso</option>
+                <option value="Valladolid" {{ $alumni->city == 'Valladolid' ? 'selected' : '' }}>Valladolid</option>
+                <option value="Victorias City" {{ $alumni->city == 'Victorias City' ? 'selected' : '' }}>Victorias City</option>
+            </select>
             @error('city')
             <span class="invalid-feedback text-danger">{{ $message }}</span>
             @enderror
         </div>
-      </div>
+    </div>
+
       <div class="col-lg-6">
         <div class="form-group">
             <label for="district">District</label>
-            <input type="text" name="district" class="form-control @error('district') is-invalid @enderror" id="district" placeholder="district" value="{{old('district', $alumni->district)}}" required>
+            <input type="text" name="district" class="form-control @error('district') is-invalid @enderror" id="district" placeholder="district" value="{{old('district', $alumni->district)}}" readonly required>
             @error('district')
             <span class="invalid-feedback text-danger">{{ $message }}</span>
             @enderror
@@ -114,7 +148,7 @@
       <div class="col-lg-6">
         <div class="form-group">
             <label for="province">Province</label>
-            <input type="text" name="province" class="form-control @error('province') is-invalid @enderror" id="province" placeholder="province" value="{{old('province', $alumni->province)}}" required>
+            <input type="text" name="province" class="form-control @error('province') is-invalid @enderror" id="province" placeholder="province" value="{{old('province', $alumni->province)}}" readonly required>
             @error('province')
             <span class="invalid-feedback text-danger">{{ $message }}</span>
             @enderror
@@ -123,7 +157,7 @@
       <div class="col-lg-6">
         <div class="form-group">
             <label for="region">Region</label>
-            <input type="text" name="region" class="form-control @error('region') is-invalid @enderror" id="region" placeholder="region" value="{{old('region', $alumni->region)}}" required>
+            <input type="text" name="region" class="form-control @error('region') is-invalid @enderror" id="region" placeholder="region" value="{{old('region', $alumni->region)}}" readonly required>
             @error('region')
             <span class="invalid-feedback text-danger">{{ $message }}</span>
             @enderror
@@ -141,7 +175,7 @@
       <div class="col-lg-6">
         <div class="form-group">
             <label for="age">Age</label>
-            <input type="number" name="age" class="form-control @error('age') is-invalid @enderror" id="age" placeholder="age" value="{{old('age', $alumni->age)}}" required>
+            <input type="number" name="age" class="form-control @error('age') is-invalid @enderror" id="age" placeholder="age" value="{{old('age', $alumni->age)}}" readonly required>
             @error('age')
             <span class="invalid-feedback text-danger">{{ $message }}</span>
             @enderror
@@ -150,10 +184,16 @@
       <div class="col-lg-6">
         <div class="form-group">
             <label for="sex">Sex</label>
-            <input type="text" name="sex" class="form-control @error('sex') is-invalid @enderror" id="sex" placeholder="sex" value="{{old('sex', $alumni->sex)}}" required>
+            <select id="city" name="sex" class="form-control required">
+                <option value="">--Select--</option>
+                <option value="Male" {{ $alumni->sex == 'Male' ? 'selected' : '' }}>Male</option>
+                <option value="Female" {{ $alumni->sex == 'Female' ? 'selected' : '' }}>Female</option>
+
+            </select>
             @error('sex')
             <span class="invalid-feedback text-danger">{{ $message }}</span>
             @enderror
+
         </div>
       </div>
     </div>
@@ -161,7 +201,7 @@
       <div class="col-lg-6">
         <div class="form-group">
             <label for="nationality">Nationality</label>
-            <input type="text" name="nationality" class="form-control @error('nationality') is-invalid @enderror" id="nationality" placeholder="nationality" value="{{old('nationality', $alumni->nationality)}}" required>
+            <input type="text" name="nationality" class="form-control @error('nationality') is-invalid @enderror" id="nationality" placeholder="nationality" value="{{old('nationality', $alumni->nationality)}}" readonly required>
             @error('nationality')
             <span class="invalid-feedback text-danger">{{ $message }}</span>
             @enderror
@@ -170,10 +210,17 @@
       <div class="col-lg-6">
         <div class="form-group">
             <label for="civil_status">Civil Status</label>
-            <input type="text" name="civil_status" class="form-control @error('civil_status') is-invalid @enderror" id="civil_status" placeholder="civil_status" value="{{old('civil_status', $alumni->civil_status)}}" required>
+            <select id="city" name="civil_status" class="form-control required">
+                <option value="">--Select--</option>
+                <option value="Single" {{ $alumni->civil_status == 'Single' ? 'selected' : '' }}>Single</option>
+                <option value="Married" {{ $alumni->civil_status == 'Married' ? 'selected' : '' }}>Married</option>
+                <option value="Divorced" {{ $alumni->civil_status == 'Divorced' ? 'selected' : '' }}>Divorced</option>
+                <option value="Widowed" {{ $alumni->civil_status == 'Widowed' ? 'selected' : '' }}>Widowed</option>
+            </select>
             @error('civil_status')
             <span class="invalid-feedback text-danger">{{ $message }}</span>
             @enderror
+
         </div>
       </div>
     </div>
@@ -199,16 +246,22 @@
       <div class="col-lg-6">
         <div class="form-group">
             <label for="training_status">Training Status</label>
-            <input type="text" name="training_status" class="form-control @error('training_status') is-invalid @enderror" id="training_status" placeholder="training_status" value="{{old('training_status', $alumni->training_status)}}" required>
+            <select id="city" name="training_status" class="form-control required">
+                <option value="">--Select--</option>
+                <option value="Still Training" {{ $alumni->training_status == 'Still Training' ? 'selected' : '' }}>Still Training</option>
+                <option value="Alumni" {{ $alumni->training_status == 'Alumni' ? 'selected' : '' }}>Alumni</option>
+                <option value="Employed" {{ $alumni->training_status == 'Employed' ? 'selected' : '' }}>Employed</option>
+            </select>
             @error('training_status')
             <span class="invalid-feedback text-danger">{{ $message }}</span>
             @enderror
+
         </div>
       </div>
       <div class="col-lg-6">
         <div class="form-group">
             <label for="scholarship">Scholarship</label>
-            <input type="text" name="scholarship" class="form-control @error('scholarship') is-invalid @enderror" id="scholarship" placeholder="scholarship" value="{{old('scholarship', $alumni->scholarship)}}" required>
+            <input type="text" name="scholarship" class="form-control @error('scholarship') is-invalid @enderror" id="scholarship" placeholder="scholarship" value="{{old('scholarship', $alumni->scholarship)}}" readonly required>
             @error('scholarship')
             <span class="invalid-feedback text-danger">{{ $message }}</span>
             @enderror
@@ -233,6 +286,80 @@
         </div>
     </div>
 </div>
+
+
+<script>
+
+
+
+    function updateDistrict() {
+
+var city = document.getElementById('city').value;
+
+var district = document.getElementById('district');
+
+var districtValue = '';
+
+
+
+if (['Calatrava', 'Don Salvador Benedicto', 'Escalante City', 'San Carlos City', 'Toboso'].includes(city)) {
+
+districtValue = 'District 1';
+
+} else if (['Cadiz City', 'Manapla', 'Sagay City'].includes(city)) {
+
+districtValue = 'District 2';
+
+} else if (['Murcia', 'Silay City', 'Talisay City', 'Victorias City'].includes(city)) {
+
+districtValue = 'District 3';
+
+} else if (['Bago City', 'La Carlota City', 'Pontevedra', 'Pulupandan', 'San Enrique', 'Valladolid'].includes(city)) {
+
+districtValue = 'District 4';
+
+} else if (['Binalbagan', 'Himamaylan City', 'Hinigaran', 'La Castellana', 'Moises Padilla'].includes(city)) {
+
+districtValue = 'District 5';
+
+} else {
+
+districtValue = 'District 6';
+
+}
+
+
+
+district.value = districtValue;
+
+}
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+
+document.getElementById('city').addEventListener('change', updateDistrict);
+
+});
+
+
+function calculateAge() {
+        var birthdate = document.getElementById("birthdate").value;
+        if (birthdate) {
+            var today = new Date();
+            var birthDate = new Date(birthdate);
+            var age = today.getFullYear() - birthDate.getFullYear();
+            var monthDifference = today.getMonth() - birthDate.getMonth();
+
+            // Adjust age if birth month hasn't occurred yet this year
+            if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+
+            document.getElementById("age").value = age;
+        }
+    }
+</script>
 
 @endsection
 

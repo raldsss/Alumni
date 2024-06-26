@@ -22,12 +22,12 @@ class AlumnilogController extends Controller
         $alumni = Alumni::where('email', $request->email)->first();
 
         if ($alumni) {
-            // Update pending status
+
             if ($alumni->pending) {
                 $alumni->pending = false;
                 $alumni->save();
             }
-            Auth::guard('alumni')->loginUsingId($alumni->alumni_id); // Use alumni_id as the identifier
+            Auth::guard('alumni')->loginUsingId($alumni->alumni_id);
             return redirect()->route('surveyform')->with('success', 'Login Successful.');
         }
 

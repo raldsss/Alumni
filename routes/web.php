@@ -43,7 +43,6 @@ Route::middleware(['auth'])->group(function () {
 Route::post('sendmail/', [GmailController::class, 'Send'])->name('sendmail.send');
 
 
-// Route::post('/surveyform', [EmploymentdataController::class, 'store'])->name('store');
 Route::post('/alumni/store/{alumni}', [EmploymentdataController::class, 'store'])->name('store');
 Route::get('/alumnilog', [AlumnilogController::class, 'showLoginForm'])->name('alumnilog');
 Route::post('/alumni/signin', [AlumnilogController::class, 'signin'])->name('alumni.signin');
@@ -53,6 +52,16 @@ Route::get('/response', function () {
     return view('response');
 })->name('response');
 Route::get('/employmentdata', [EmploymentdataController::class, 'index'])->name('employmentdata.index');
-Route::get('/dashboard/countSubmissions', [DashboardController::class, 'countSubmissions'])->name('dashboard.countSubmissions');
+Route::get('/employmentdata/{emp_id}/edit', [EmploymentDataController::class, 'edit'])->name('employmentdata.edit');
+Route::put('/employmentdata/{emp_id}', [EmploymentDataController::class, 'update'])->name('employmentdata.update');
 
-Route::get('/employment-data', [DashboardController::class, 'data'])->name('data');
+
+Route::get('/alumni/{alumni_id}/view', [AlumniController::class, 'edits'])->name('view');
+Route::put('/alumni/{alumni_id}/view', [AlumniController::class, 'upgrade'])->name('updatealumni');
+
+Route::get('/fetch-employment-data', 'EmploymentdataController@fetchEmploymentData')->name('fetch-employment-data');
+
+Route::get('/employmentdata/index', [EmploymentdataController::class, 'index'])->name('index.employmentdata');
+Route::get('/alumni/filter', [EmploymentdataController::class, 'filter'])->name('filter.alumni');
+
+Route::get('/filterAlumni', [AlumniController::class, 'filterAlumni']);

@@ -91,7 +91,7 @@
                   <div class="col-lg-6">
                     <div class="form-group">
                         <label for="city/municipality">City/Municipality:</label><br>
-                        <select class="form-control" id="city" name="city" required>
+                        <select class="form-control" id="city" name="city" value="{{old('city')}}" required>
                         <option value="">--Select--</option>
                         <option value="Binalbagan">Binalbagan</option>
                         <option value="Bago City">Bago City</option>
@@ -136,7 +136,7 @@
                   <div class="col-lg-6">
                     <div class="form-group">
                       <label for="province">Province</label>
-                      <input type="text" name="province" class="form-control @error('province') is-invalid @enderror" id="province" placeholder="Province" value="{{old('province')}}" required>
+                      <input type="text" name="province" class="form-control @error('province') is-invalid @enderror" id="province" placeholder="Province" value="{{ old('province', 'Negros Occidendal') }}" readonly required>
                       @error('province')
                       <span class="invalid-feedback text-danger">{{ $message }}</span>
                       @enderror
@@ -145,7 +145,7 @@
                   <div class="col-lg-6">
                     <div class="form-group">
                       <label for="region">Region</label>
-                      <input type="text" name="region" class="form-control @error('region') is-invalid @enderror" id="region" placeholder="Region" value="{{old('region')}}" required>
+                      <input type="text" name="region" class="form-control @error('region') is-invalid @enderror" id="region" placeholder="Region" value="{{ old('region', 'VI') }}" readonly required>
                       @error('region')
                       <span class="invalid-feedback text-danger">{{ $message }}</span>
                       @enderror
@@ -188,7 +188,7 @@
                   <div class="col-lg-6">
                     <div class="form-group">
                       <label for="nationality">Nationality</label>
-                      <input type="text" name="nationality" class="form-control @error('nationality') is-invalid @enderror" id="nationality" placeholder="Nationality" value="{{old('nationality')}}" required>
+                      <input type="text" name="nationality" class="form-control @error('nationality') is-invalid @enderror" id="nationality" placeholder="Nationality" value="{{ old('nationality', 'Filipino') }}" readonly  required>
                       @error('nationality')
                       <span class="invalid-feedback text-danger">{{ $message }}</span>
                       @enderror
@@ -197,7 +197,13 @@
                   <div class="col-lg-6">
                     <div class="form-group">
                       <label for="civil_status">Civil Status</label>
-                      <input type="text" min="1" name="civil_status" class="form-control @error('civil_status') is-invalid @enderror" id="civil_status" placeholder="Civil Status" value="{{old('civil_status')}}" required>
+                      <select class="form-control" id="civil_status" name="civil_status" required>
+                        <option value="">--Select--</option>
+                        <option value="Single">Single</option>
+                        <option value="Married">Married</option>
+                        <option value="Divorced">Divorced</option>
+                        <option value="Widowed">Widowed</option>
+                    </select>
                       @error('civil_status')
                       <span class="invalid-feedback text-danger">{{ $message }}</span>
                       @enderror
@@ -217,7 +223,7 @@
                   <div class="col-lg-6">
                     <div class="form-group">
                       <label for="batchNumber">BatchNumber</label>
-                      <input type="text" name="batchNumber" class="form-control @error('batchNumber') is-invalid @enderror" id="batchNumber" placeholder="Batch Number" value="{{old('batchNumber')}}" required>
+                      <input type="number" name="batchNumber" class="form-control @error('batchNumber') is-invalid @enderror" id="batchNumber" placeholder="Batch Number" value="{{old('batchNumber')}}" required>
                       @error('batchNumber')
                       <span class="invalid-feedback text-danger">{{ $message }}</span>
                       @enderror

@@ -48,6 +48,7 @@
         left: -17rem;
     }
 
+
 </style>
 <div class="content-wrapper">
     <div class="content-header">
@@ -76,7 +77,40 @@
                         </div>
                         <div class="card-body">
                             <div id="toolbar">
-                                <button id="exportExcelButton" class="btn btn-success"><i class="fa-solid fa-download" style="margin: 5px;"></i>Export to Excel</button>
+                                <form id="filterForm" action="/alumni" method="GET">
+                                    @csrf
+                                    <select name="batchNumber" id="batchNumberFilter" class="form-control" style="width: 200px; display: inline-block;">
+                                        <option value="">Select Batch Number</option>
+                                        @foreach($alumni->unique('batchNumber') as $data)
+                                            <option value="{{ $data->batchNumber }}" {{ request('batchNumber') == $data->batchNumber ? 'selected' : '' }}>{{ $data->batchNumber }}</option>
+                                        @endforeach
+                                    </select>
+                                    <select name="city" id="cityFilter" class="form-control" style="width: 200px; display: inline-block;">
+                                        <option value="">Select City/Municipality</option>
+                                        @foreach($alumni->unique('city') as $data)
+                                            <option value="{{ $data->city }}" {{ request('city') == $data->city ? 'selected' : '' }}>{{ $data->city }}</option>
+                                        @endforeach
+                                    </select>
+                                    <?php
+                                        // Default to current month and year
+                                        $currentMonth = date('Y-m');
+                                        // Check if filter_month is set in the request
+                                        if (request()->has('filter_month')) {
+                                            $currentMonth = request('filter_month');
+                                        }
+                                    ?>
+                                    <input type="month" name="filter_month" id="filterMonth" value="{{ $currentMonth }}" class="form-control" style="width: 200px; display: inline-block;">
+                                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                                </form>
+
+
+
+
+                              </div>
+                            <div id="toolbar">
+                                <button id="exportExcelButton" class="btn btn-success">
+                                    <i class="fa-solid fa-download" style="margin: 5px;"></i>Export to Excel
+                                </button>
                             </div>
                             <table id="table"
                                    data-toggle="table"
@@ -111,7 +145,7 @@
                                         <th data-field="scholarship" data-filter-control="input">Scholarship</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="filteredDataBody">
                                     @foreach($alumni as $data)
                                     <tr>
                                         <td class="bs-checkbox"><input data-index="{{ $loop->index }}" name="btSelectItem" type="checkbox"></td>
@@ -146,13 +180,13 @@
                                 </tbody>
                             </table>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -160,65 +194,113 @@
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="position: relative;left:7rem;">Send Email</h1>
             </div>
             <div class="modal-body">
-            <form method="post" action="{{ route('sendmail.send') }}">
-                {{ csrf_field() }}
+                <form method="post" action="{{ route('sendmail.send') }}">
+                    {{ csrf_field() }}
 
-                <div class="form-group">
-                    <label>Body:</label>
-                    <textarea name="body" class="form-control @error('body') is-invalid @enderror" required rows="8">
-                Dear Alumni,
+                    <div class="form-group" style="padding: 10px; background: #dbdada; border-radius: 10px; border: 1 px solid #dbdada; color: #464343;">
+                        <input type="checkbox" class="checkbox" id="sendToAll" name="sendToAll" onchange="updateEmailFieldFromSelect()"> Send to All
+                    </div>
 
-                We invite you to participate in our Alumni Employment Survey. Your feedback is important to us!
+                    <div class="form-group">
+                        <label>Search and Select Recipient:</label>
+                        <input id="emailSend" class="form-control" oninput="updateEmailFieldFromSearch()" list="emailList" placeholder="Type to search...">
+                        <datalist id="emailList">
+                            @foreach($alumni as $data)
+                                <option value="{{ $data->email }}">{{ $data->name }}</option>
+                            @endforeach
+                        </datalist>
+                    </div>
 
-                Please complete the survey using the link below:
+                    <div class="form-group">
+                        <label>Select Batch:</label>
+                        <select id="batchSelect" class="form-control" name="batchNumber" onchange="updateEmailFieldFromBatch()">
+                            <option value="">Select a batch</option>
+                            @foreach($alumni->unique('batchNumber') as $data)
+                                <option value="{{ $data->batchNumber }}">{{ $data->batchNumber }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                [https://aets-nby88ix38-raldsss-projects.vercel.app/alumnilog]
+                    <input type="hidden" id="emailField" name="emails" value="">
 
-                Thank you for your participation!
+                    <div class="form-group">
+                        <label>Body:</label>
+                        <textarea name="body" class="form-control @error('body') is-invalid @enderror" required rows="8">We invite you to participate in our Alumni Employment Survey. Your feedback is important to us!</textarea>
+                    </div>
 
-                Best regards,
-                Admin
-                    </textarea>
-                </div>
-
-
-
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" name="submit" class="btn btn-primary">Send Email</button>
+                    </div>
+                </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" name="submit" class="btn btn-primary">Send Email</button>
-            </div>
-        </form>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title fs-5" id="exampleModalLabel" style="position: relative;left:4rem;">Alumni Registration</h2>
-            </div>
-            <div class="modal-body">
-            <form method="post" action="#">
-                {{ csrf_field() }}
 
-                <div class="form-group">
-                    <label>Import File :</label>
-                    <input type="file" name="body" class="form-control" required>
-                </div>
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" name="submit" class="btn btn-primary">Import</button>
-            </div>
-        </form>
-        </div>
-    </div>
-</div>
+<script>
+    function updateEmailFieldFromSelect() {
+        const sendToAllCheckbox = document.getElementById('sendToAll');
+        const emailInput = document.getElementById('emailSend');
+        const emailField = document.getElementById('emailField');
+
+        if (sendToAllCheckbox.checked) {
+            emailField.value = ''; // Clear email field if Send to All is checked
+            emailInput.value = ''; // Clear search input if Send to All is checked
+            document.getElementById('batchSelect').disabled = true; // Disable batch select if Send to All is checked
+        } else {
+            emailField.value = emailInput.value;
+            document.getElementById('batchSelect').disabled = false; // Enable batch select if Send to All is unchecked
+        }
+    }
+
+    function updateEmailFieldFromSearch() {
+        const sendToAllCheckbox = document.getElementById('sendToAll');
+        const emailInput = document.getElementById('emailSend');
+        const emailField = document.getElementById('emailField');
+
+        if (!sendToAllCheckbox.checked) {
+            emailField.value = emailInput.value;
+        }
+    }
+
+    function updateEmailFieldFromBatch() {
+        const batchSelect = document.getElementById('batchSelect');
+        const emailField = document.getElementById('emailField');
+        const selectedBatch = batchSelect.value;
+
+        if (selectedBatch) {
+            emailField.value = ''; // Clear email field if a batch is selected
+            document.getElementById('sendToAll').disabled = true; // Disable Send to All if batch is selected
+        } else {
+            document.getElementById('sendToAll').disabled = false; // Enable Send to All if no batch is selected
+        }
+    }
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
 
 @endsection
+<script>
+    $(document).ready(function() {
+        $('#batchNumberFilter, #employmentStatusFilter, [name="filter_month"]').on('change', function() {
+            $('#filterForm').submit();
+        });
+    });
+</script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
@@ -230,15 +312,27 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.3/xlsx.full.min.js"></script>
 <script>
- $(function () {
+$(function () {
     var $table = $('#table');
 
     $('#exportExcelButton').click(function () {
         exportTableToExcel($table);
     });
 
-    $table.bootstrapTable({
+    $('#batchNumberFilter, #employmentStatusFilter').change(function () {
+        var selectedBatch = $('#batchNumberFilter').val();
+        var selectedStatus = $('#employmentStatusFilter').val();
+        var filters = {};
+        if (selectedBatch) {
+            filters.batchNumber = selectedBatch;
+        }
+        if (selectedStatus) {
+            filters.employment_status = selectedStatus;
+        }
+        $table.bootstrapTable('filterBy', filters);
     });
+
+    $table.bootstrapTable();
 
     $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
         var selectedRows = $table.bootstrapTable('getSelections');
@@ -253,10 +347,10 @@
 });
 
 function exportTableToExcel($table) {
-    var selectedRows = $table.bootstrapTable('getSelections');
+    var rows = $table.bootstrapTable('getData', {useCurrentPage: true, includeHiddenRows: false});
 
-    if (selectedRows.length === 0) {
-        alert('No rows selected');
+    if (rows.length === 0) {
+        alert('No rows to export');
         return;
     }
 
@@ -268,7 +362,7 @@ function exportTableToExcel($table) {
         }
     });
 
-    var data = selectedRows.map(function (row) {
+    var data = rows.map(function (row) {
         return headers.map(function (header) {
             var key = $table.find('th:contains("' + header + '")').data('field');
             return row[key] || '';
@@ -281,6 +375,7 @@ function exportTableToExcel($table) {
 
     XLSX.writeFile(workbook, 'Alumni Record.xlsx');
 }
+
 
 
 

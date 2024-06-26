@@ -11,30 +11,44 @@ class GmailController extends Controller
 {
     public function send(Request $request)
     {
-        $request->validate([
-            'body' => 'required'
+        $this->validate($request, [
+            'body' => 'required',
+            'emails' => 'nullable|string',
+            'sendToAll' => 'nullable|boolean',
+            'batchNumber' => 'nullable|string',
         ]);
 
         $data = [
             'body' => $request->body,
         ];
 
-        try {
-            $alumniWithEmail = Alumni::whereNotNull('email')->get();
+        $emails = [];
 
-            foreach ($alumniWithEmail as $alumnus) {
+        // Check if 'sendToAll' is selected
+        if ($request->has('sendToAll') && $request->sendToAll) {
+            $emails = Alumni::pluck('email')->toArray();
+        }
+        // Check if specific email is provided
+        elseif ($request->has('emails') && !empty($request->emails)) {
+            $emails = explode(',', $request->emails);
+        }
+        // Check if batch number is selected
+        elseif ($request->has('batchNumber') && !empty($request->batchNumber)) {
+            $emails = Alumni::whereIn('batchNumber', explode(',', $request->batchNumber))->pluck('email')->toArray();
+        }
+
+        foreach ($emails as $email) {
+            $email = trim($email);
+            $alumnus = Alumni::where('email', $email)->first();
+            if ($alumnus) {
                 Mail::to($alumnus->email)->send(new GmailDemo($data));
 
                 $alumnus->pending = true;
                 $alumnus->save();
             }
-
-            Alert::info('Success', 'Emails sent successfully to all alumni with email addresses and pending status updated!');
-        } catch (\Exception $e) {
-            Alert::error('Error', 'An error occurred while sending emails: ' . $e->getMessage());
-            return redirect()->back();
         }
 
+        Alert::info('Success', 'Emails sent successfully to the selected alumni and pending status updated!');
         return redirect('/alumni');
     }
 }
